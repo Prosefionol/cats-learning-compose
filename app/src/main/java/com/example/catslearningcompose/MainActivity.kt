@@ -9,8 +9,17 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
+import androidx.navigation.compose.rememberNavController
+import com.example.catslearningcompose.ui.screens.AddItemRoute
+import com.example.catslearningcompose.ui.screens.ItemsRoute
+import com.example.catslearningcompose.ui.screens.LocalNavController
+import com.example.catslearningcompose.ui.screens.add.AddItemScreen
+import com.example.catslearningcompose.ui.screens.item.ItemsScreen
 import com.example.catslearningcompose.ui.theme.CatsLearningComposeTheme
 
 class MainActivity : ComponentActivity() {
@@ -19,29 +28,34 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
         setContent {
             CatsLearningComposeTheme {
-                Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
-                    Greeting(
-                        name = "Android",
-                        modifier = Modifier.padding(innerPadding)
-                    )
-                }
+                CatsLearningComposeApp()
             }
         }
     }
 }
 
 @Composable
-fun Greeting(name: String, modifier: Modifier = Modifier) {
-    Text(
-        text = "Hello $name!",
-        modifier = modifier
-    )
+fun CatsLearningComposeApp() {
+    val navController = rememberNavController()
+    CompositionLocalProvider(
+        LocalNavController provides navController
+    ) {
+        NavHost(
+            navController = navController,
+            startDestination = ItemsRoute,
+            modifier = Modifier
+                .fillMaxSize()
+        ) {
+            composable(ItemsRoute) { ItemsScreen() }
+            composable(AddItemRoute) { AddItemScreen() }
+        }
+    }
 }
 
 @Preview(showBackground = true)
 @Composable
-fun GreetingPreview() {
+fun CatsLearningComposePreview() {
     CatsLearningComposeTheme {
-        Greeting("Android")
+        CatsLearningComposeApp()
     }
 }
