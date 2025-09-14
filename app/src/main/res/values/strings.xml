@@ -1,7 +1,10 @@
 <resources>
     <string name="app_name">CatsLearningCompose</string>
     <string name="outlined_text_field_placeholder_text">Enter new item</string>
+    <string name="outlined_text_field_placeholder_edit_text">Edit item</string>
     <string name="add_button_title">Add</string>
+    <string name="edit_button_title">Edit</string>
     <string name="item_screen_title">Items</string>
     <string name="add_item_screen_title">Add Item</string>
+    <string name="edit_item_screen_title">Edit Item</string>
 </resources>
