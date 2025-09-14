@@ -3,7 +3,9 @@ package com.example.catslearningcompose.ui.screens.add
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.size
 import androidx.compose.material3.Button
 import androidx.compose.material3.CircularProgressIndicator
@@ -27,6 +29,7 @@ import com.example.catslearningcompose.ui.screens.AddItemRoute
 import com.example.catslearningcompose.ui.screens.EventConsumer
 import com.example.catslearningcompose.ui.screens.LocalNavController
 import com.example.catslearningcompose.ui.screens.add.AddItemViewModel.ScreenState
+import com.example.catslearningcompose.ui.screens.routeClass
 
 @Composable
 fun AddItemScreen() {
@@ -38,7 +41,7 @@ fun AddItemScreen() {
         onAddItemClicked = viewModel::add
     )
     EventConsumer(viewModel.exitChannel) {
-        if (navController.currentBackStackEntry?.destination?.route == AddItemRoute) {
+        if (navController.currentBackStackEntry.routeClass() == AddItemRoute::class) {
             navController.popBackStack()
         }
     }
@@ -64,6 +67,9 @@ fun AddItemContent(
             },
             enabled = screenState.isTextInputEnabled
         )
+        Spacer(modifier = Modifier
+            .height(12.dp)
+        )
         Button(
             onClick = { onAddItemClicked(inputText) },
             enabled = screenState.isAddButtonEnabled(inputText)
@@ -73,6 +79,9 @@ fun AddItemContent(
                 fontSize = 12.sp
             )
         }
+        Spacer(modifier = Modifier
+            .height(12.dp)
+        )
         Box(
             modifier = Modifier
                 .size(32.dp)

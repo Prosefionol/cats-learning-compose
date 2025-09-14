@@ -1,7 +1,5 @@
 package com.example.catslearningcompose.model
 
-import android.content.Context
-import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -12,9 +10,7 @@ import javax.inject.Singleton
 
 
 @Singleton
-class ItemsRepository @Inject constructor(
-    @ApplicationContext private val context: Context
-) {
+class ItemsRepository @Inject constructor() {
     private val itemsFlow =
         MutableStateFlow(List(size = START_LIST_SIZE) { "Item ${it + 1}" })
 
@@ -24,6 +20,18 @@ class ItemsRepository @Inject constructor(
     }
 
     fun getItems(): Flow<List<String>> = itemsFlow.onStart { delay(1500) }
+
+    suspend fun getByIndex(index: Int): String {
+        delay(500)
+        return itemsFlow.value[index]
+    }
+
+    suspend fun update(index: Int, newTitle: String) {
+        delay(1000)
+        itemsFlow.update { oldList->
+            oldList.toMutableList().apply { set(index, newTitle) }
+        }
+    }
 
     companion object {
         const val START_LIST_SIZE: Int = 5
