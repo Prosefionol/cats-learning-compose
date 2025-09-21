@@ -13,16 +13,13 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.getValue
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.dp
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.toRoute
-import com.example.catslearningcompose.model.ItemsRepository
 import com.example.catslearningcompose.ui.screens.AddItemRoute
 import com.example.catslearningcompose.ui.screens.AppToolbar
 import com.example.catslearningcompose.ui.screens.EditItemRoute
@@ -35,7 +32,6 @@ import com.example.catslearningcompose.ui.screens.item.ItemsScreen
 import com.example.catslearningcompose.ui.screens.routeClass
 import com.example.catslearningcompose.ui.theme.CatsLearningComposeTheme
 import dagger.hilt.android.AndroidEntryPoint
-import javax.inject.Inject
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
