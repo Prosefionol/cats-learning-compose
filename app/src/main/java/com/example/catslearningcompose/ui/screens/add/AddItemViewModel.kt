@@ -23,21 +23,19 @@ class AddItemViewModel @Inject constructor(
     private val _exitChannel = Channel<Unit>()
     val exitChannel: ReceiveChannel<Unit> = _exitChannel
 
-    fun add (title: String) {
+    fun add(title: String) {
         viewModelScope.launch {
             _stateFlow.update { it.copy(isAddInProgress = true) }
             itemsRepository.add(title)
-            _exitChannel.send(Unit)
+            goBack()
         }
     }
 
-    data class ScreenState(
-        private val isAddInProgress: Boolean = false
-    ) {
-        val isTextInputEnabled: Boolean get() = !isAddInProgress
-        val isProgressVisible: Boolean get() = isAddInProgress
-        fun isAddButtonEnabled(input: String): Boolean {
-            return input.isNotBlank() && !isAddInProgress
-        }
+    private suspend fun goBack() {
+        _exitChannel.send(Unit)
     }
+
+    data class ScreenState(
+        val isAddInProgress: Boolean = false
+    )
 }

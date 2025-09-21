@@ -3,6 +3,7 @@ package com.example.catslearningcompose.ui.screens.item
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.catslearningcompose.model.ItemsRepository
+import com.example.catslearningcompose.model.LoadResult
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.SharingStarted
 import kotlinx.coroutines.flow.StateFlow
@@ -15,16 +16,13 @@ class ItemsViewModel @Inject constructor(
     itemsRepository: ItemsRepository
 ): ViewModel() {
 
-    val stateFlow: StateFlow<ScreenState> = itemsRepository.getItems()
-        .map(ScreenState::Success)
+    val stateFlow: StateFlow<LoadResult<ScreenState>> = itemsRepository.getItems()
+        .map { LoadResult.Success(ScreenState(it)) }
         .stateIn(
             scope = viewModelScope,
             started = SharingStarted.Lazily,
-            initialValue = ScreenState.Loading
+            initialValue = LoadResult.Loading
         )
 
-    sealed class ScreenState {
-        data object Loading: ScreenState()
-        data class Success(val items: List<String>): ScreenState()
-    }
+    data class ScreenState(val items: List<String>)
 }
