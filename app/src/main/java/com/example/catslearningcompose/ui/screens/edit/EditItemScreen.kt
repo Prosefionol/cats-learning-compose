@@ -13,8 +13,8 @@ import com.example.catslearningcompose.model.LoadResult
 import com.example.catslearningcompose.ui.components.ItemDetails
 import com.example.catslearningcompose.ui.components.ItemDetailsState
 import com.example.catslearningcompose.ui.components.LoadResultContent
-import com.example.catslearningcompose.ui.screens.EditItemRoute
 import com.example.catslearningcompose.ui.screens.EventConsumer
+import com.example.catslearningcompose.ui.screens.ItemsGraph.EditItemRoute
 import com.example.catslearningcompose.ui.screens.LocalNavController
 import com.example.catslearningcompose.ui.screens.edit.EditItemViewModel.ScreenState
 import com.example.catslearningcompose.ui.screens.routeClass

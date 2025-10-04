@@ -16,7 +16,7 @@ import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.catslearningcompose.model.LoadResult
 import com.example.catslearningcompose.ui.components.LoadResultContent
-import com.example.catslearningcompose.ui.screens.EditItemRoute
+import com.example.catslearningcompose.ui.screens.ItemsGraph.EditItemRoute
 import com.example.catslearningcompose.ui.screens.LocalNavController
 import com.example.catslearningcompose.ui.screens.item.ItemsViewModel.*
 
