@@ -11,8 +11,8 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.catslearningcompose.R
 import com.example.catslearningcompose.ui.components.ItemDetails
 import com.example.catslearningcompose.ui.components.ItemDetailsState
-import com.example.catslearningcompose.ui.screens.AddItemRoute
 import com.example.catslearningcompose.ui.screens.EventConsumer
+import com.example.catslearningcompose.ui.screens.ItemsGraph.AddItemRoute
 import com.example.catslearningcompose.ui.screens.LocalNavController
 import com.example.catslearningcompose.ui.screens.add.AddItemViewModel.ScreenState
 import com.example.catslearningcompose.ui.screens.routeClass

@@ -7,4 +7,6 @@
     <string name="item_screen_title">Items</string>
     <string name="add_item_screen_title">Add Item</string>
     <string name="edit_item_screen_title">Edit Item</string>
+    <string name="settings_screen_title">Settings</string>
+    <string name="profile_screen_title">Profile</string>
 </resources>
