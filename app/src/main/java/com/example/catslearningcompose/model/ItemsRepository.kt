@@ -16,6 +16,7 @@ class ItemsRepository @Inject constructor() {
 
     suspend fun add(title: String) {
         delay(1000)
+        verifyNoDuplicates(title)
         itemsFlow.update { it + title }
     }
 
@@ -23,13 +24,22 @@ class ItemsRepository @Inject constructor() {
 
     suspend fun getByIndex(index: Int): String {
         delay(500)
+        if (index == 0) throw LoadDataException()
         return itemsFlow.value[index]
     }
 
     suspend fun update(index: Int, newTitle: String) {
         delay(1000)
+        verifyNoDuplicates(newTitle, index)
         itemsFlow.update { oldList->
             oldList.toMutableList().apply { set(index, newTitle) }
+        }
+    }
+
+    private fun verifyNoDuplicates(title: String, index: Int = -1) {
+        val duplicatedItemIndex = itemsFlow.value.indexOf(title)
+        if (duplicatedItemIndex != -1 && duplicatedItemIndex != index) {
+            throw DuplicateException(title)
         }
     }
 

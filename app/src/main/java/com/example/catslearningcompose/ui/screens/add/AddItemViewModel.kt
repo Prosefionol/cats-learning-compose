@@ -23,11 +23,19 @@ class AddItemViewModel @Inject constructor(
     private val _exitChannel = Channel<Unit>()
     val exitChannel: ReceiveChannel<Unit> = _exitChannel
 
+    private val _errorChannel = Channel<Exception>()
+    val errorChannel: ReceiveChannel<Exception> = _errorChannel
+
     fun add(title: String) {
         viewModelScope.launch {
             _stateFlow.update { it.copy(isAddInProgress = true) }
-            itemsRepository.add(title)
-            goBack()
+            try {
+                itemsRepository.add(title)
+                goBack()
+            } catch (e: Exception) {
+                _stateFlow.update { it.copy(isAddInProgress = false) }
+                _errorChannel.send(e)
+            }
         }
     }
 

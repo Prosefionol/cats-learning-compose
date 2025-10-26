@@ -26,10 +26,21 @@ class EditItemViewModel @AssistedInject constructor(
     private val _exitChannel = Channel<Unit>()
     val exitChannel: ReceiveChannel<Unit> = _exitChannel
 
+    private val _errorChannel = Channel<Exception>()
+    val errorChannel: ReceiveChannel<Exception> = _errorChannel
+
     init {
+        loadItem()
+    }
+
+    fun loadItem() {
         viewModelScope.launch {
-            val loadedItem = itemsRepository.getByIndex(index)
-            _stateFlow.value = LoadResult.Success(ScreenState(loadedItem))
+            _stateFlow.value = LoadResult.Loading
+            _stateFlow.value = try {
+                LoadResult.Success(ScreenState(itemsRepository.getByIndex(index)))
+            } catch (e: Exception) {
+                LoadResult.Error(e)
+            }
         }
     }
 
@@ -37,9 +48,14 @@ class EditItemViewModel @AssistedInject constructor(
         val loadResult = _stateFlow.value
         if (loadResult !is LoadResult.Success) return
         viewModelScope.launch {
-            showProgress(loadResult)
-            itemsRepository.update(index, newTitle)
-            goBack()
+            try {
+                showProgress(loadResult)
+                itemsRepository.update(index, newTitle)
+                goBack()
+            } catch (e: Exception) {
+                hideProgress(loadResult)
+                _errorChannel.send(e)
+            }
         }
     }
 
@@ -48,6 +64,14 @@ class EditItemViewModel @AssistedInject constructor(
     ) {
         val currentScreenState = loadResult.data
         val updatedScreenState = currentScreenState.copy(isEditInProgress = true)
+        _stateFlow.value = LoadResult.Success(updatedScreenState)
+    }
+
+    private fun hideProgress(
+        loadResult: LoadResult.Success<ScreenState>
+    ) {
+        val currentScreenState = loadResult.data
+        val updatedScreenState = currentScreenState.copy(isEditInProgress = false)
         _stateFlow.value = LoadResult.Success(updatedScreenState)
     }
 
