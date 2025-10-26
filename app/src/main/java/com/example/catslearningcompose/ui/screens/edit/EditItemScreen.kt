@@ -1,15 +1,18 @@
 package com.example.catslearningcompose.ui.screens.edit
 
+import android.widget.Toast
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.catslearningcompose.R
 import com.example.catslearningcompose.model.LoadResult
+import com.example.catslearningcompose.ui.components.ExceptionToMessageMapper
 import com.example.catslearningcompose.ui.components.ItemDetails
 import com.example.catslearningcompose.ui.components.ItemDetailsState
 import com.example.catslearningcompose.ui.components.LoadResultContent
@@ -21,23 +24,30 @@ import com.example.catslearningcompose.ui.screens.routeClass
 
 @Composable
 fun EditItemScreen(
-    index: Int
+    index: Int,
+    exceptionToMessageMapper: ExceptionToMessageMapper = ExceptionToMessageMapper.Default
 ) {
     val viewModel = hiltViewModel<EditItemViewModel, EditItemViewModel.Factory> { factory ->
         factory.create(index)
     }
     val navController = LocalNavController.current
     val screenState by viewModel.stateFlow.collectAsState()
+    val context = LocalContext.current
 
     EventConsumer(channel = viewModel.exitChannel) {
         if (navController.currentBackStackEntry.routeClass() == EditItemRoute::class) {
             navController.popBackStack()
         }
     }
+    EventConsumer(viewModel.errorChannel) { exception ->
+        val message = exceptionToMessageMapper.getUserMessage(exception, context)
+        Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
+    }
 
     EditItemContent(
         loadResult = screenState,
-        onEditButtonClicked = viewModel::update
+        onEditButtonClicked = viewModel::update,
+        onTryAgainButtonClick = viewModel::loadItem
     )
 }
 
@@ -45,6 +55,7 @@ fun EditItemScreen(
 fun EditItemContent(
     loadResult: LoadResult<ScreenState>,
     onEditButtonClicked: (String) -> Unit,
+    onTryAgainButtonClick: () -> Unit
 ) {
     LoadResultContent(
         loadResult = loadResult,
@@ -53,7 +64,8 @@ fun EditItemContent(
                 state = screenState,
                 onEditButtonClicked = onEditButtonClicked
             )
-        }
+        },
+        onTryAgainAction = onTryAgainButtonClick
     )
 }
 
@@ -85,6 +97,7 @@ fun EditItemScreenPreview() {
                 isEditInProgress = false
             )
         ),
-        onEditButtonClicked = {}
+        onEditButtonClicked = {},
+        onTryAgainButtonClick = {}
     )
 }

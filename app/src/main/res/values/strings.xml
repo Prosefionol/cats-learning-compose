@@ -4,9 +4,13 @@
     <string name="outlined_text_field_placeholder_edit_text">Edit item</string>
     <string name="add_button_title">Add</string>
     <string name="edit_button_title">Edit</string>
+    <string name="button_exception_title">Try again</string>
     <string name="item_screen_title">Items</string>
     <string name="add_item_screen_title">Add Item</string>
     <string name="edit_item_screen_title">Edit Item</string>
     <string name="settings_screen_title">Settings</string>
     <string name="profile_screen_title">Profile</string>
+    <string name="failed_to_load_data_error_text">Failed to load data</string>
+    <string name="already_exists_error_text">\'%1$s\' already exists in the list</string>
+    <string name="unknown_error_text">Unknown error, please try again later</string>
 </resources>
