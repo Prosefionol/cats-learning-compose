@@ -8,10 +8,9 @@ import dagger.assisted.Assisted
 import dagger.assisted.AssistedFactory
 import dagger.assisted.AssistedInject
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.channels.Channel
-import kotlinx.coroutines.channels.ReceiveChannel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
 @HiltViewModel(assistedFactory = EditItemViewModel.Factory::class)
@@ -23,11 +22,8 @@ class EditItemViewModel @AssistedInject constructor(
     private val _stateFlow = MutableStateFlow<LoadResult<ScreenState>>(LoadResult.Loading)
     val stateFlow: StateFlow<LoadResult<ScreenState>> = _stateFlow
 
-    private val _exitChannel = Channel<Unit>()
-    val exitChannel: ReceiveChannel<Unit> = _exitChannel
-
-    private val _errorChannel = Channel<Exception>()
-    val errorChannel: ReceiveChannel<Exception> = _errorChannel
+    private val _eventStateFlow = MutableStateFlow(EventState())
+    val eventStateFlow: StateFlow<EventState> = _eventStateFlow
 
     init {
         loadItem()
@@ -54,8 +50,22 @@ class EditItemViewModel @AssistedInject constructor(
                 goBack()
             } catch (e: Exception) {
                 hideProgress(loadResult)
-                _errorChannel.send(e)
+                _eventStateFlow.update { oldState ->
+                    oldState.copy(error = e)
+                }
             }
+        }
+    }
+
+    fun onExitHandled() {
+        _eventStateFlow.update { oldState ->
+            oldState.copy(exit = null)
+        }
+    }
+
+    fun onErrorHandled() {
+        _eventStateFlow.update { oldState ->
+            oldState.copy(error = null)
         }
     }
 
@@ -75,9 +85,16 @@ class EditItemViewModel @AssistedInject constructor(
         _stateFlow.value = LoadResult.Success(updatedScreenState)
     }
 
-    private suspend fun goBack() {
-        _exitChannel.send(Unit)
+    private fun goBack() {
+        _eventStateFlow.update { oldState ->
+            oldState.copy(exit = Unit)
+        }
     }
+
+    data class EventState(
+        val exit: Unit? = null,
+        val error: Exception? = null
+    )
 
     data class ScreenState(
         val loadedItem: String,

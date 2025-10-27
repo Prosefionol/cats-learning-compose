@@ -3,6 +3,7 @@ package com.example.catslearningcompose.ui.screens.edit
 import android.widget.Toast
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
@@ -10,17 +11,16 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.catslearningcompose.R
 import com.example.catslearningcompose.model.LoadResult
 import com.example.catslearningcompose.ui.components.ExceptionToMessageMapper
 import com.example.catslearningcompose.ui.components.ItemDetails
 import com.example.catslearningcompose.ui.components.ItemDetailsState
 import com.example.catslearningcompose.ui.components.LoadResultContent
-import com.example.catslearningcompose.ui.screens.EventConsumer
-import com.example.catslearningcompose.ui.screens.ItemsGraph.EditItemRoute
 import com.example.catslearningcompose.ui.screens.LocalNavController
 import com.example.catslearningcompose.ui.screens.edit.EditItemViewModel.ScreenState
-import com.example.catslearningcompose.ui.screens.routeClass
 
 @Composable
 fun EditItemScreen(
@@ -32,16 +32,23 @@ fun EditItemScreen(
     }
     val navController = LocalNavController.current
     val screenState by viewModel.stateFlow.collectAsState()
+    val eventState by viewModel.eventStateFlow.collectAsStateWithLifecycle(
+        minActiveState = Lifecycle.State.RESUMED
+    )
     val context = LocalContext.current
 
-    EventConsumer(channel = viewModel.exitChannel) {
-        if (navController.currentBackStackEntry.routeClass() == EditItemRoute::class) {
+    LaunchedEffect(eventState) {
+        eventState.exit?.let {
             navController.popBackStack()
+            viewModel.onExitHandled()
         }
     }
-    EventConsumer(viewModel.errorChannel) { exception ->
-        val message = exceptionToMessageMapper.getUserMessage(exception, context)
-        Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
+    LaunchedEffect(eventState) {
+        eventState.error?.let { exception ->
+            val message = exceptionToMessageMapper.getUserMessage(exception, context)
+            Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
+            viewModel.onErrorHandled()
+        }
     }
 
     EditItemContent(
