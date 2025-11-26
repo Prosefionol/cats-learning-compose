@@ -14,8 +14,12 @@ hilt = "2.57.1"
 hiltNavCompose = "1.2.0"
 ktxSerialization = "1.6.3"
 ktxImmutableCollections = "0.3.7"
+robolectric = "4.16"
+mockk = "1.14.6"
 
 [libraries]
+mockk = { module = "io.mockk:mockk", version.ref = "mockk" }
+robolectric = { module = "org.robolectric:robolectric", version.ref = "robolectric" }
 kotlinx-collections-immutable = { module = "org.jetbrains.kotlinx:kotlinx-collections-immutable", version.ref = "ktxImmutableCollections" }
 kotlinx-serialization-core = { module = "org.jetbrains.kotlinx:kotlinx-serialization-core", version.ref = "ktxSerialization" }
 hilt = { module = "com.google.dagger:hilt-android", version.ref = "hilt" }

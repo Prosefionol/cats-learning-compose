@@ -18,8 +18,10 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.catslearningcompose.TestTags
 
 data class ItemDetailsState(
     val loadedItem: String,
@@ -46,14 +48,16 @@ fun ItemDetails(
             placeholder = {
                 Text(state.textFieldPlaceholder)
             },
-            enabled = !state.isActionInProgress
+            enabled = !state.isActionInProgress,
+            modifier = Modifier.testTag(TestTags.OutlinedTextField)
         )
         Spacer(modifier = Modifier
             .height(12.dp)
         )
         Button(
             onClick = { onActionButtonClick(inputText) },
-            enabled = !state.isActionInProgress
+            enabled = !state.isActionInProgress,
+            modifier = Modifier.testTag(TestTags.SubmitButton)
         ) {
             Text(
                 text = state.actionButtonText,
@@ -68,7 +72,7 @@ fun ItemDetails(
                 .size(32.dp)
         ) {
             if (state.isActionInProgress) {
-                CircularProgressIndicator(Modifier.fillMaxSize())
+                CircularProgressIndicator(Modifier.fillMaxSize().testTag(TestTags.CircularProgressIndicator))
             }
         }
     }

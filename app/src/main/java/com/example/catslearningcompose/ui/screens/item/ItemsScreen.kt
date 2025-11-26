@@ -10,10 +10,12 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.testTag
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.example.catslearningcompose.TestTags
 import com.example.catslearningcompose.model.LoadResult
 import com.example.catslearningcompose.ui.components.LoadResultContent
 import com.example.catslearningcompose.ui.screens.ItemsGraph.EditItemRoute
@@ -53,6 +55,7 @@ fun ItemsContent(
                             .clickable{ onItemClicked(index) }
                             .fillMaxWidth()
                             .padding(12.dp)
+                            .testTag(TestTags.LazyColumnItem)
                     )
                 }
             }
